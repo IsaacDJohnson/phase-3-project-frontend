@@ -13,13 +13,12 @@ function App() {
   const [rating, setRating] = useState("")
   const [comic_id, setComicId] = useState("")
   const [data, setData] = useState([])
-  const [refresh, setRefresh] = useState('')
   
   //get data from server
 
   
   useEffect(()=>{
-      fetch("http://localhost:9090/comics")
+      fetch("http://localhost:9292/comics")
       .then(res => res.json())
       .then(data => setData(data))
   }, [])
@@ -42,8 +41,46 @@ function App() {
   //DELETE request refresh
 
   const onSubmitRefresh = (submission) => {
-      setRefresh(submission)
-      console.log(refresh)
+    const updatedData = data.map((comic)=>{
+      if (submission.comic_id === comic.id) {
+        return {
+          ...comic, 
+          reviews: comic.reviews.map((review)=>{
+            if (review.id === submission.id) {
+              return submission
+            }
+            else {
+              return review
+            }
+          })
+        }
+      } 
+      else {
+        return comic
+      }
+    })
+    setData(updatedData)
+  }
+
+
+  const handleComicDelete = (submission) => {
+    const updatedData = data.filter((comic) => submission.id !== comic.id)
+    setData(updatedData)
+  }
+
+  const handleDelete = (submission) => {
+    const updatedData = data.map((comic)=>{
+      if (submission.comic_id === comic.id) {
+        return {
+          ...comic, 
+          reviews: comic.reviews.filter((review) => submission.id !== review.id)
+        }
+      } 
+      else {
+        return comic
+      }
+    })
+    setData(updatedData)
   }
 
   return (
@@ -53,13 +90,16 @@ function App() {
       <Routes>
         <Route exact path="/" element={<Home 
           data={data} 
-          onSubmitRefresh={onSubmitRefresh} 
+          onSubmitRefresh={onSubmitRefresh}
+          handleDelete={handleDelete} 
+          handleComicDelete={handleComicDelete}
         />}/>
         <Route exact path="/submissionForm" element ={<NewReview 
           data={data} 
           handleComicChange={handleComicChange}
           handleChangeRev={handleChangeRev}
           handleChangeRate={handleChangeRate}
+          onSubmitRefresh={onSubmitRefresh}
           comic={comic}
           review={review}
           rating={rating}

@@ -2,7 +2,7 @@ import React from "react";
 import ListItem from "./ListItem";
 
 
-function ListContainer({list, onSubmitRefresh, handleEdit}){
+function ListContainer({list, onSubmitRefresh, handleEdit, handleDelete, handleComicDelete}){
   
     return (
         <div>
@@ -14,6 +14,8 @@ function ListContainer({list, onSubmitRefresh, handleEdit}){
                         key={item.id} 
                         onSubmitRefresh={onSubmitRefresh}
                         handleEdit={handleEdit}
+                        handleDelete={handleDelete}
+                        handleComicDelete={handleComicDelete}
                     />) : []}
             </ul>
         </div>

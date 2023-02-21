@@ -1,11 +1,11 @@
 import React, {useState} from 'react';
 
-function NewReview({comic_id, data, handleComicChange, handleChangeRev, handleChangeRate, review, rating, comic}){
+function NewReview({comic_id, data, handleComicChange, handleChangeRev, handleChangeRate, review, rating, comic, onSubmitRefresh}){
 
     const [comicVal, setComicVal] = useState('Add A New Comic.')
 
     const handleSubmit = () => {
-        fetch(`http://localhost:9090/reviews`, { 
+        fetch(`http://localhost:9292/reviews`, { 
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -20,9 +20,8 @@ function NewReview({comic_id, data, handleComicChange, handleChangeRev, handleCh
           .then((newReview) => console.log(newReview));
       }
 
-      const newComic = (e) => {
-        e.preventDefault()
-        fetch(`http://localhost:9090/comics`, { 
+      const newComic = () => {
+        fetch(`http://localhost:9292/comics`, { 
           method: "POST",
           headers: {
             "Content-Type": "application/json",

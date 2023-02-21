@@ -3,7 +3,7 @@ import EditReview from "./EditReview";
 
 
 
-function Review({item, onSubmitRefresh}){ 
+function Review({item, onSubmitRefresh, handleDelete}){ 
 
     const {body, rating} = item
     const [reviewBody, setReviewBody] = useState(body)
@@ -11,13 +11,13 @@ function Review({item, onSubmitRefresh}){
     const [editForm, setEditForm] = useState(false)
     //DELETE request 
 
-    const handleDelete = (e) => {
-      e.preventDefault()
-        fetch(`http://localhost:9090/reviews/${item.id}`, {
+    const deleteHandler = (e) => {
+        e.preventDefault()
+        fetch(`http://localhost:9292/reviews/${item.id}`, {
             method: "DELETE",
         })
         .then(( r )=> r.json())
-        .then((deletedReview)=> onSubmitRefresh(deletedReview));
+        .then((deletedReview)=> handleDelete(deletedReview));
     }
 
 
@@ -33,7 +33,7 @@ function Review({item, onSubmitRefresh}){
 
     const handlePatch = (e) => {
       e.preventDefault()
-      fetch(`http://localhost:9090/reviews/${item.id}`, {
+      fetch(`http://localhost:9292/reviews/${item.id}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -59,7 +59,7 @@ function Review({item, onSubmitRefresh}){
                 <p>{item.body}</p>
                 <h4>{item.rating} out of 5</h4>
                 <button className="button" onClick={() => editForm ? setEditForm(false) : setEditForm(true)}>--Edit--</button>
-                <button onClick={handleDelete} className="button">--Delete-</button>
+                <button onClick={deleteHandler} className="button">--Delete-</button>
                 {editForm ? <EditReview handleChangeBod={handleChangeBod} 
                             handleChangeRate={handleChangeRate} 
                             handleSubmit={handlePatch}
